@@ -3,10 +3,40 @@ services:
   web:
     image: tutorial
     build: .
+    command: gunicorn DRF_Tutorial.wsgi:application --bind 0.0.0.0:8000
     container_name: tutorial_drf_container
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     volumes:
       - ./:/code
-    command: python3 manage.py runserver 0.0.0.0:8000
+      - staticfiles:/code/staticfiles
+      - media:/code/media  # Wolumen dla plików media
+    env_file:
+      - ./.env
+    depends_on:
+      - db
 
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    volumes:
+      - staticfiles:/code/staticfiles
+      - media:/code/media  # Wolumen dla plików media
+    depends_on:
+      - web
+
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django
+volumes:
+  postgres_data:
+  staticfiles:
+  media:
