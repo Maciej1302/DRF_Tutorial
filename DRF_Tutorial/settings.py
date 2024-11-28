@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","").split(" ")
 # Application definition
 
 STATIC_URL = "/static/"
@@ -113,6 +113,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:1337',
+    'http://127.0.0.1:1337',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
